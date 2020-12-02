@@ -20,7 +20,7 @@ import shared.util.Product;
  * view components, retrieving data from them and providing functionality
  * for components.
  *
- * @author Gosia
+ * @author Gosia, Hadi
  */
 
 public class ShopManagerController implements ViewController
@@ -138,53 +138,56 @@ public class ShopManagerController implements ViewController
     //new view for adding products
     }
     else if(actionEvent.getSource() == editProductBtn){
-      //new view for editing buttons  
+      editShopProduct();
     }
     else if(actionEvent.getSource() == deleteProductBtn){
-      productTable.getSelectionModel().select(-1);
       deleteProduct();
     }
     
   }
-
-  /**
-   * Implementation of delete button
-   * @author Dorin
-   */
-  private void deleteProduct()
+  private void editShopProduct()
   {
     if(productTable.getSelectionModel().getSelectedCells().isEmpty())
     {
-      errorLabel.setText("Please first select a product in a table to remove.");
+      errorLabel.setText("Please first select a product in a table.");
     }
     else
     {
+      /*
+          Taking the selected row from the table, creating a product object,
+          getting all tags assigned to the selected product, a passing it
+          to the next view.
+       */
       TablePosition pos = productTable.getSelectionModel().getSelectedCells().get(0);
       int row = pos.getRow();
       Product item = productTable.getItems().get(row);
-      String response = shopManagerViewModel.deleteProductPrice(item.getProductId(), username);
-      errorLabel.setText(response);
-
+      ObservableList<String> tags = shopManagerViewModel.getAllTagsById(item.getProductId());
+      viewHandler.openEditShopManagerProductView(item, tags);
     }
+  }
+  private void deleteProduct()
+  {
   }
 
   @FXML
   void loadTags(MouseEvent event) {
     Platform.runLater(()-> {
       TablePosition pos = productTable.getSelectionModel().getSelectedCells().get(0);
-      int row = pos.getRow();
-      Product item = productTable.getItems().get(row);
-      int productId = item.getProductId();
+      if(pos!=null){
+        int row = pos.getRow();
+        Product item = productTable.getItems().get(row);
+        int productId = item.getProductId();
 
-      //get all tags assigned to the specific product
+        //get all tags assigned to the specific product
 
-      ObservableList<String> tags = shopManagerViewModel.getAllTagsById(productId);
-      System.out.println();
-      tagListTable.getItems().clear();
-      tagsColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
+        ObservableList<String> tags = shopManagerViewModel.getAllTagsById(productId);
+        System.out.println();
+        tagListTable.getItems().clear();
+        tagsColumn.setCellValueFactory(data -> new SimpleStringProperty(data.getValue()));
 
-      for (int i = 0; i < tags.size(); i++)
-        tagListTable.getItems().add(tags.get(i));
+        for (int i = 0; i < tags.size(); i++)
+          tagListTable.getItems().add(tags.get(i));
+      }
     });
   }
 }

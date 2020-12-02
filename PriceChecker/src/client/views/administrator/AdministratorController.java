@@ -56,12 +56,6 @@ public class AdministratorController implements ViewController
   private Label errorLabel;
   @FXML
   private TextField searchBar;
-  @FXML
-  private Button productsPageBtn;
-  @FXML
-  private Button usersPageBtn;
-  @FXML
-  private Button newsletterPageBtn;
 
   private ViewHandler viewHandler;
   private AdministratorViewModel administratorViewModel;
@@ -182,12 +176,7 @@ public class AdministratorController implements ViewController
     }
     else if(actionEvent.getSource() == deleteProductBtn)
     {
-      productTable.getSelectionModel().select(-1);
       deleteProduct();
-    }
-    else if(actionEvent.getSource() == usersPageBtn)
-    {
-      viewHandler.openAdministratorUsersPage();
     }
   }
 

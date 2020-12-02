@@ -1,8 +1,10 @@
 package client.networking;
-import shared.util.*;
+import shared.util.Product;
+import shared.util.ProductList;
+import shared.util.PropertyChangeSubject;
+import shared.util.ShopPrice;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Interface is used for separating the models from the client implementation as
@@ -29,14 +31,12 @@ public interface Client extends PropertyChangeSubject
   String addNewTag(String newTag);
   String editProduct(String productName, String productDescription,
       String category, ArrayList<String> parseTag, int productId);
+  String editShopProduct(String productName, String productDescription,
+      String category, ArrayList<String> parseTag, int productId,int price,String username);
   String deleteProduct(int productId);
   void logOut();
   String validateRegister(String username, String email, String password, String dob);
   void setClientUsername(String username);
   String getLoggedInUser();
   ArrayList<Product> getAllProductsForSpecificManager(String username);
-  String deleteProductPrice(int productId, String username);
-  List<User> getAllUsers();
-  String addNewManager(User newManager);
-  String validateEditUser(String oldUsername, String oldEmail, String username, String email, String password, String dob);
 }
