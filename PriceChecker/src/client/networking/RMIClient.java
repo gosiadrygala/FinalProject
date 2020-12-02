@@ -4,8 +4,6 @@ import shared.networking.RMIServer;
 import shared.util.Product;
 import shared.util.ProductList;
 import shared.util.ShopPrice;
-import shared.util.User;
-
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import java.rmi.NotBoundException;
@@ -14,8 +12,6 @@ import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Class implementing the client interface. Used for requesting data from
  * the RMI server as well as firing events.
@@ -30,6 +26,7 @@ public class RMIClient implements Client, ClientCallback {
   private RMIServer rmiServer;
   private PropertyChangeSupport support;
   private String clientUsername;
+  private int userid;
 
   public RMIClient() {
     support = new PropertyChangeSupport(this);
@@ -162,6 +159,17 @@ public class RMIClient implements Client, ClientCallback {
     }
   }
 
+  @Override public String editShopProduct(String productName,
+      String productDescription, String category, ArrayList<String> parseTag,
+      int productId, int price,String clientUsername)
+  {
+    try {
+      return rmiServer.editShopProduct(productName, productDescription, category, parseTag, productId,price,clientUsername);
+    } catch (RemoteException e) {
+      throw new RuntimeException("Could not contact server");
+    }
+  }
+
   @Override
   public String deleteProduct(int productId) {
     try {
@@ -191,6 +199,7 @@ public class RMIClient implements Client, ClientCallback {
     return clientUsername;
   }
 
+
   @Override public ArrayList<Product> getAllProductsForSpecificManager(
       String username)
   {
@@ -200,27 +209,6 @@ public class RMIClient implements Client, ClientCallback {
       throw new RuntimeException("Could not contact server");
     }
   }
-
-  @Override public String deleteProductPrice(int productId, String username)
-  {
-    try {
-      return rmiServer.deleteProductPrice(productId, username);
-    } catch (RemoteException e) {
-      throw new RuntimeException("Could not contact server");
-    }
-  }
-
-  @Override public List<User> getAllUsers()
-  {
-    try
-    {
-      return rmiServer.getAllUsers();
-    }
-    catch (RemoteException e) {
-      throw new RuntimeException("Could not contact server");
-    }
-  }
-
 
   @Override public void update(String eventName, Object newValue)
       throws RemoteException
@@ -261,8 +249,7 @@ public class RMIClient implements Client, ClientCallback {
               response.equals("Houston we have a problem someone fucked up the code.")) {
         return response;
       } else {
-
-       rmiServer.registerClient(this);
+        rmiServer.registerClient(this);
         return response;
       }
 
@@ -270,36 +257,4 @@ public class RMIClient implements Client, ClientCallback {
       throw new RuntimeException("Could not contact server");
     }
   }
-
-  @Override public String addNewManager(User newManager)
-  {
-    try
-    {
-      return rmiServer.addNewManager(newManager);
-    }
-    catch (RemoteException e) {
-      throw new RuntimeException("Could not contact server");
-    }
-  }
-
-  @Override public String validateEditUser(String oldUsername, String oldEmail, String username, String email, String password, String dob)
-  {
-
-    try {
-      String response = rmiServer.validateUserEdit(oldUsername, oldEmail, username, email, password, dob);
-      if (response.equals("User with this username already exist") ||
-          response.equals("Email already used") ||
-          response.equals("Houston we have a problem someone fucked up the code.")) {
-        return response;
-      } else {
-
-         //register as listener
-        rmiServer.registerClient(this);
-        return response;
-      } }
-    catch (RemoteException e) {
-      throw new RuntimeException("Could not contact server");
-    }
-  }
-
 }

@@ -1,15 +1,15 @@
 package client.views.shopManager;
 
 import client.clientmodel.shopManagerModel.ShopManagerModel;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import shared.util.EventType;
 import shared.util.Product;
-import shared.util.ProductList;
 
-import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
+/**
+ * Class used for pushing the request from controller class and sending back the responses.
+ * @author Hadi
+ */
 
 public class ShopManagerViewModel
 {
@@ -22,16 +22,6 @@ public class ShopManagerViewModel
     this.shopManagerModel = shopManagerModel;
     listOfAllProductsForSpecificManager = FXCollections.observableArrayList();
     tagsForSpecificProduct = FXCollections.observableArrayList();
-
-    shopManagerModel.addListener(EventType.DELETED_PRODUCT_PRICE.name(), this::reloadData);
-  }
-
-  private void reloadData(PropertyChangeEvent propertyChangeEvent)
-  {
-    Platform.runLater(()-> {
-      ArrayList<Product> productList = (ArrayList<Product>) propertyChangeEvent.getNewValue();
-      listOfAllProductsForSpecificManager.setAll(productList);
-    });
   }
 
   public String getLoggedInUser()
@@ -60,10 +50,5 @@ public class ShopManagerViewModel
   public void logOut()
   {
     shopManagerModel.logOut();
-  }
-
-  public String deleteProductPrice(int productId, String username)
-  {
-    return shopManagerModel.deleteProductPrice(productId, username);
   }
 }

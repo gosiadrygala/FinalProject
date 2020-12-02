@@ -8,5 +8,4 @@ import java.util.ArrayList;
 public interface ShopManagerServerModel extends PropertyChangeSubject
 {
   ArrayList<Product> getAllProductsForSpecificManager(String username);
-  String deleteProductPrice(int productId, String username);
 }

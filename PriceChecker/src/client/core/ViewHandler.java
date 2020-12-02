@@ -1,24 +1,18 @@
 package client.core;
 
-import client.views.addNewManagerAdmin.AddNewManagerAdminController;
 import client.views.addNewProductAdmin.AddNewProductAdminController;
 import client.views.administrator.AdministratorController;
-import client.views.administratorEditUser.AdministratorEditUserController;
-import client.views.administratorUsersPage.AdministratorUsersPageController;
 import client.views.editProductAdmin.EditProductAdminController;
+import client.views.editProductShopManager.EditProductShopManagerController;
 import client.views.login.LoginController;
 import client.views.register.RegisterController;
 import client.views.shopManager.ShopManagerController;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import shared.util.Product;
-import shared.util.User;
 
 import java.io.IOException;
  /**
@@ -37,16 +31,6 @@ public class ViewHandler
   }
 
   public void start(){
-
-    // Terminating and closing the program on X button in window
-    stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-      @Override
-      public void handle(WindowEvent t) {
-        Platform.exit();
-        System.exit(0);
-      }
-    });
-
     openLoginView();
   }
 
@@ -70,6 +54,8 @@ public class ViewHandler
     }
   }
 
+
+
   public void openRegisterView(){
     //TODO change this method
     try
@@ -89,6 +75,7 @@ public class ViewHandler
     {
       e.printStackTrace();
     }
+
   }
 
   public void openShopManagerView(){
@@ -166,8 +153,7 @@ public class ViewHandler
       Parent root = loader.load();
       EditProductAdminController view = loader.getController();
 
-      view.setProductData
-          (product, tags);
+      view.setProductData(product, tags);
       view.init(this, viewModelFactory);
       Scene scene = new Scene(root);
       stage.setScene(scene);
@@ -179,67 +165,27 @@ public class ViewHandler
       e.printStackTrace();
     }
   }
-
-  public void openAdministratorUsersPage()
-  {
-    try
+    public void openEditShopManagerProductView(Product product, ObservableList<String> tags)
     {
-      FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("../views/administratorUsersPage/AdministratorUsersPage.fxml"));
-      Parent root = loader.load();
-      AdministratorUsersPageController view = loader.getController();
+      try
+      {
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("../views/editProductShopManager/EditProductShopManager.fxml"));
+        Parent root = loader.load();
+        EditProductShopManagerController view = loader.getController();
 
-      view.init(this, viewModelFactory);
-      Scene scene = new Scene(root);
-      stage.setScene(scene);
-      stage.setTitle("Edit Users Administrator");
-      stage.show();
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-  }
-
-  public void openAddNewManagerView(){
-    try
-    {
-      FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("../views/addNewManagerAdmin/AdministratorEditUser.fxml"));
-      Parent root = loader.load();
-      AddNewManagerAdminController view = loader.getController();
-
-      view.init(this, viewModelFactory);
-      Scene scene = new Scene(root);
-      stage.setScene(scene);
-      stage.setTitle("Add shop manager");
-      stage.show();
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
+        view.setProductData
+            (product, tags);
+        view.init(this, viewModelFactory);
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        stage.setTitle("Edit Product Shop Manager");
+        stage.show();
+      }
+      catch (IOException e)
+      {
+        e.printStackTrace();
+      }
     }
   }
 
-  public void openAdministratorEditUserView(User user)
-  {
-    try
-    {
-      FXMLLoader loader = new FXMLLoader();
-      loader.setLocation(getClass().getResource("../views/administratorEditUser/AdministratorEditUser.fxml"));
-      Parent root = loader.load();
-      AdministratorEditUserController ctlr = loader.getController();
-      ctlr.setUser(user);
-
-      ctlr.init(this, viewModelFactory);
-      Scene scene = new Scene(root);
-      stage.setScene(scene);
-      stage.setTitle("Edit User");
-      stage.show();
-    }
-    catch (IOException e)
-    {
-      e.printStackTrace();
-    }
-  }
-}
